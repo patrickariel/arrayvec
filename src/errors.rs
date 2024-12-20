@@ -50,7 +50,7 @@ impl<T> fmt::Debug for CapacityError<T> {
 }
 
 /// Error value indicating that capacity is not completely filled
-#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct UnderfilledError<T, const CAP: usize>(ArrayVec<T, CAP>);
 
 impl<T, const CAP: usize> UnderfilledError<T, CAP> {
@@ -63,11 +63,27 @@ impl<T, const CAP: usize> UnderfilledError<T, CAP> {
     }
 }
 
-#[cfg(feature="std")]
-impl<T: fmt::Debug, const CAP: usize> Error for UnderfilledError<T, CAP> {}
+impl<T, const CAP: usize> fmt::Debug for UnderfilledError<T, CAP> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "UnderfilledError: capacity is not filled: expected {}, got {}",
+            CAP,
+            self.0.len()
+        )
+    }
+}
 
-impl<T, const CAP: usize> fmt::Display for UnderfilledError<T, CAP> { 
+#[cfg(feature="std")]
+impl<T, const CAP: usize> Error for UnderfilledError<T, CAP> {}
+
+impl<T, const CAP: usize> fmt::Display for UnderfilledError<T, CAP> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "capacity is not filled: expected {}, got {}", CAP, self.0.len())
+        write!(
+            f,
+            "capacity is not filled: expected {}, got {}",
+            CAP,
+            self.0.len()
+        )
     }
 }
