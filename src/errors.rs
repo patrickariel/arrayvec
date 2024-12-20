@@ -47,3 +47,24 @@ impl<T> fmt::Debug for CapacityError<T> {
     }
 }
 
+/// Error value indicating that capacity is not completely filled
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct UnderfilledError {
+    capacity: usize,
+    len: usize,
+}
+
+impl UnderfilledError {
+    pub const fn new(capacity: usize, len: usize) -> Self {
+        Self { capacity, len }
+    }
+}
+
+#[cfg(feature="std")]
+impl Error for UnderfilledError {}
+
+impl fmt::Display for UnderfilledError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "capacity is not filled: expected {}, got {}", self.capacity, self.len)
+    }
+}
