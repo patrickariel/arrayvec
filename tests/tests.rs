@@ -456,7 +456,8 @@ fn test_insert() {
 fn test_into_inner_1() {
     let mut v = ArrayVec::from([1, 2]);
     v.pop();
-    assert_eq!(v.into_inner(), Err(UnderfilledError::new(2, 1)));
+    let u = v.clone();
+    assert_eq!(v.into_inner(), Err(UnderfilledError::new(u)));
 }
 
 #[test]

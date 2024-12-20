@@ -693,9 +693,9 @@ impl<T, const CAP: usize> ArrayVec<T, CAP> {
     /// capacity (see [`capacity`]).
     /// 
     /// [`capacity`]: #method.capacity
-    pub fn into_inner(self) -> Result<[T; CAP], UnderfilledError> {
+    pub fn into_inner(self) -> Result<[T; CAP], UnderfilledError<T, CAP>> {
         if self.len() < self.capacity() {
-            Err(UnderfilledError::new(self.capacity(), self.len()))
+            Err(UnderfilledError::new(self))
         } else {
             unsafe { Ok(self.into_inner_unchecked()) }
         }
